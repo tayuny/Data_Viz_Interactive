@@ -5,10 +5,14 @@ a {
 
 html,
 body {
-  background: #D6D6CE;
+  background: white;
   font-family: Verdana, Geneva, sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+div.topics {
+  background: rgb(225, 229, 233);
 }
