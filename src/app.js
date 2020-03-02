@@ -215,7 +215,7 @@ function plot_choropleth(val, count){
        .attr("alignment-baseline","middle");
     
     svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) - 10).attr("y", (margin.top/5) + 40)
-       .text("square footage of buildings and distance to commercail district").style("font-size", "14px")
+       .text("square footage of buildings and distance to commercial district").style("font-size", "14px")
        .attr("alignment-baseline","middle")
 
   d3.json('./data/full_sub_CL701902_part.geojson').then(function(data) {
