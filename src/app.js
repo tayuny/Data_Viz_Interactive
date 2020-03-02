@@ -20,19 +20,60 @@ domReady(() => {
 });
 
 function render(val, count) {
-  // remove old contents
-  //select('.map_part *').remove();
-  //select('.line-part *').remove();
+
   select('body').selectAll("svg").remove();
   plot_choropleth(val, count);
-  // start doing stuff
-  };
-
-function app(data){
 
 };
 
+function app(data){};
+
 function tract_info(data){
+
+  const margin = {top: 60, left: 100, right: 100, bottom: 60};
+  const height = 600
+  const width = 500
+  
+  const svg = select("body")
+             .append("svg")
+             .attr("class", "line-part")
+             .attr("height", height)
+             .attr("width", width);
+
+  svg.append("text")
+     .attr("x", (width -margin.left-margin.right) / 3)
+     .attr("y", margin.top/3)
+     .text("Property Value for Commercial and Residential Building")
+     .style("font-size", "14px")
+     .attr("alignment-baseline","middle")
+  
+  svg.append("text")
+     .attr("x", (width -margin.left-margin.right) / 3)
+     .attr("y", (margin.top/3) + 15)
+     .text("in Each Percentile, the property values have unit of $1000")
+     .style("font-size", "14px")
+     .attr("alignment-baseline","middle")
+  
+  svg.append("text")
+     .attr("x", (width -margin.right))
+     .attr("y", height - 20)
+     .text("Percentile")
+     .style("font-size", "12px")
+     .attr("alignment-baseline","middle")
+  
+  svg.append("text")
+     .attr("x", margin.left / 10)
+     .attr("y", margin.top + 20)
+     .text("Property")
+     .style("font-size", "12px")
+     .attr("alignment-baseline","middle")
+  
+     svg.append("text")
+     .attr("x", margin.left / 10)
+     .attr("y", margin.top + 35)
+     .text("Values")
+     .style("font-size", "12px")
+     .attr("alignment-baseline","middle")
 
   const x_arr = data.reduce((el, r) => el.concat(r.percentile), []);
   const y_arr = data.reduce((el, r) => el.concat(r.COM_value), []);
@@ -41,17 +82,6 @@ function tract_info(data){
   const min_xarr = d3.min(x_arr);
   const max_yarr = d3.max(y_arr);
   const min_yarr = d3.min(y_arr);
-
-  const margin = {top: 60, left: 80, right: 80, bottom: 60};
-  const height = 500
-  const width = 500
-  const axisLabelOffset = 30;
-
-  const svg = select("body")
-             .append("svg")
-             .attr("class", "line-part")
-             .attr("height", height)
-             .attr("width", width);
   
   const pwidth = width - margin.left - margin.right;
   const pheight = height - margin.bottom - margin.top;
@@ -64,7 +94,7 @@ function tract_info(data){
               .nice();
   
   const y = d3.scaleLinear()
-              .domain([min_yarr, max_yarr])
+              .domain([min_yarr/100 , max_yarr / 100])
               .range([pheight, 0])
               .nice();
   
@@ -79,12 +109,12 @@ function tract_info(data){
 
   const line = d3.line()
                  .x(function(d) {return x(d.percentile);})
-                 .y(function(d) {return y(d.RES_value/ 10);})
+                 .y(function(d) {return y(d.RES_value/ 1000);})
                  .curve(d3.curveMonotoneX)
   
   const line2 = d3.line()
                  .x(function(d) {return x(d.percentile);})
-                 .y(function(d) {return y(d.COM_value/ 10);})
+                 .y(function(d) {return y(d.COM_value/ 1000);})
                  .curve(d3.curveMonotoneX)
   
   g.selectAll("dot")
@@ -92,7 +122,7 @@ function tract_info(data){
    .enter()
    .append("circle")
    .attr("cx", function(d){return x(d.percentile);})
-   .attr("cy", function(d){return y(d.RES_value / 10);})
+   .attr("cy", function(d){return y(d.RES_value / 1000);})
    .attr("r", 5)
    .attr("fill", "#4446b8")
    .on("mouseenter", function(d) {
@@ -110,14 +140,15 @@ function tract_info(data){
    .enter()
    .append("circle")
    .attr("cx", function(d){return x(d.percentile);})
-   .attr("cy", function(d){return y(d.COM_value/ 10);})
+   .attr("cy", function(d){return y(d.COM_value/ 1000);})
    .attr("r", 5)
    .attr("fill", "orange")
    .on("mouseenter", function(d) {
     d3.select(this).attr("fill", "white")
                    .attr("r", 10)
                    .attr("stroke", "orange")
-                   //.text("percentile: " + String(d.percentile) + "  ,  Property Value: " + String(d.COM_value / 10));
+                   //.text("percentile: " + String(d.percentile) + 
+                   //"  ,  Property Value: " + String(d.COM_value / 10));
     })
     .on("mouseleave", function(d) {
       d3.select(this).attr("fill", "orange")
@@ -138,11 +169,16 @@ function tract_info(data){
      .attr("stroke", "orange")
      .style("fill", "none");
 
+  svg.append("circle").attr("cx",width-margin.right).attr("cy", height - 2*margin.top).attr("r", 6).style("fill", "orange")
+  svg.append("circle").attr("cx",width-margin.right).attr("cy", height - 2*margin.top + 20).attr("r", 6).style("fill", "#4446b8")
+  svg.append("text").attr("x", width-margin.right+10).attr("y", height - 2*margin.top).text("Commercial").style("font-size", "12px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", width-margin.right+10).attr("y", height - 2*margin.top + 20).text("Residential").style("font-size", "12px").attr("alignment-baseline","middle")
 };
 
 function plot_choropleth(val, count){
   var width = 900;
-  var height = 500;
+  var height = 600;
+  const margin = {top: 60, left: 100, right: 100, bottom: 60};
 
   const div = select('.main-area')
               .append('div')
@@ -170,6 +206,18 @@ function plot_choropleth(val, count){
                 .attr("width", width)  
                 .attr("height", height);
 
+    svg.append("text").attr("x", (width -margin.left-margin.right) / 3).attr("y", margin.top/5)
+       .text("Choropleth Showing Neighborhood Attributes").style("font-size", "18px")
+       .attr("alignment-baseline","middle");
+    
+    svg.append("text").attr("x", (width -margin.left-margin.right) / 3).attr("y", (margin.top/5) + 20)
+       .text("selection between total property value, median income").style("font-size", "14px")
+       .attr("alignment-baseline","middle");
+    
+    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) - 10).attr("y", (margin.top/5) + 40)
+       .text("square footage of buildings and distance to commercail district").style("font-size", "14px")
+       .attr("alignment-baseline","middle")
+
   d3.json('./data/full_sub_CL701902_part.geojson').then(function(data) {
 
       var scale = 300000;
@@ -189,7 +237,35 @@ function plot_choropleth(val, count){
 
       const color = d3.scaleSequential()
 			  		          .domain([color_min, color_max])
-                      .interpolator(d3.interpolateYlGnBu);
+                      .interpolator(d3.interpolateBlues);
+      
+      const q_idx = [0.2, 0.4, 0.6, 0.8]
+      const val_quan = q_idx.reduce((el, r) => el.concat(Math.ceil(d3.quantile(color_dom, r))), []);
+      
+      const legend_x = width - margin.right;
+      const legend_y = height - 3 * margin.bottom;
+      const legend_gap = 15;
+      const legend = svg.selectAll("rect")
+		                    .data(val_quan.sort((a, b) => b - a))
+		                    .enter()
+		                    .append("rect")
+		                    .attr("width", 12)
+				                .attr("height", 12)
+				                .attr("x", legend_x)
+				                .attr("y", function(d, i){return legend_y + legend_gap * i;})
+                        .attr("fill", function(d){return color(d);});
+    
+      const text_x = legend_x + 15
+      const text_y = legend_y + 10
+      const text_gap = legend_gap
+      const legend_text = svg.selectAll("legend_text")
+                             .data(val_quan.sort((a, b) => b - a))
+                             .enter()
+                             .append("text")
+                             .text( function(d){ return d;} )
+                             .attr("font-size", 14)
+                             .attr("x", text_x)
+                             .attr("y", function(d, i){return text_y + text_gap * i;});
 
       svg.append("g")
          .selectAll('path')
@@ -206,5 +282,13 @@ function plot_choropleth(val, count){
             d3.select(this)
               .attr("fill", function(d){return color(d.properties[val]);})}
           );
+      
+      svg.append("text").attr("x", width / 10)
+          .attr("y", (height / 2) + 40).text("Commercial").style("font-size", "14px")
+          .attr("alignment-baseline","middle").attr("fill", "black");
+         
+      svg.append("text").attr("x", (width / 10) + 30)
+          .attr("y", (height / 2) + 55).text("District").style("font-size", "14px")
+          .attr("alignment-baseline","middle").attr("fill", "black");
   });
 }
