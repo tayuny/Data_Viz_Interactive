@@ -13,7 +13,7 @@ body {
   width: 100%;
 }
 
-div.topics h1 {
+div.topics h1{
   background: rgb(241, 243, 245);
 }
 
@@ -22,42 +22,15 @@ div.topics h3{
   font-size: 14px;
 }
 
-div.sources h {
+div.sources {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
   position: absolute;
-  bottom: 50px;
-  left: 0;
+  bottom: 0;
 }
 
-div.sources h1 {
+div.sources * {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-}
-
-div.sources h3 {
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 10px;
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-}
-
-div.sources h5 {
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 10px;
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-}
-
-div.sources h7 {
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 10px;
-  position: absolute;
-  bottom: 10px;
-  left: 0;
+  display: block;
 }
