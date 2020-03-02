@@ -243,7 +243,7 @@ function plot_choropleth(val, count){
       const val_quan = q_idx.reduce((el, r) => el.concat(Math.ceil(d3.quantile(color_dom, r))), []);
       
       const legend_x = width - margin.right;
-      const legend_y = height - 3 * margin.bottom;
+      const legend_y = height - 3 * margin.bottom - 60;
       const legend_gap = 15;
       const legend = svg.selectAll("rect")
 		                    .data(val_quan.sort((a, b) => b - a))
