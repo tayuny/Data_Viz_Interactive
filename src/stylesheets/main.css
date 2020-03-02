@@ -13,6 +13,43 @@ body {
   width: 100%;
 }
 
-div.topics {
-  background: rgb(225, 229, 233);
+div.topics h1 {
+  background: rgb(241, 243, 245);
+}
+
+div.topics h3{
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 14px;
+}
+
+div.sources h {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10px;
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+}
+
+div.sources h1 {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10px;
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+}
+
+div.sources h3 {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10px;
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+}
+
+div.sources h5 {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
 }
