@@ -22,15 +22,28 @@ div.topics h3{
   font-size: 14px;
 }
 
+.bar {
+  height: 100px;
+  width: 60px;
+  background: white;
+  opacity:0.5;
+}
+
+.bar *{
+  font-size: 14px;
+}
+
 div.sources {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
-  position: absolute;
+  background: rgb(241, 243, 245);
+  width: 100%;
+  position: fixed;
   bottom: 0;
 }
 
 div.sources * {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
-  display: block;
+  display: inline-block;
 }
