@@ -17,8 +17,8 @@ domReady(() => {
       LA_bivariate();
       article_insert();
       plot_choropleth("TotalValue", count);
-      ridge("no", "");
-      tract_info(d[0]);
+      ridge("SM", "", "2");
+      tract_info(d[0], "2");
     });
 });
 
@@ -26,48 +26,54 @@ function render(val, count, operation, CT_ind) {
 
   if (operation == "switch_var"){
     select('body').selectAll(".map_part").remove();
-    select('body').selectAll(".line-part").remove();
-    select('body').selectAll(".ridge-part").remove();
+    select('body').selectAll(".line-part2").remove();
+    select('body').selectAll(".ridge-part2").remove();
     select('body').selectAll(".switch_bar").remove();
     plot_choropleth(val, count);
-    csv('./data/perc.csv').then(d => {tract_info(d);});
-    ridge("no", "");
+    csv('./data/perc.csv').then(d => {tract_info(d, "2");});
+    ridge("SM", "", "2");
    }
   else{
-     select('body').selectAll(".line-part").remove();
+     select('body').selectAll(".line-part2").remove();
      react_line(CT_ind);
-     select('body').selectAll(".ridge-part").remove();
-     ridge("yes", CT_ind);
+     select('body').selectAll(".ridge-part2").remove();
+     ridge("yes", CT_ind, "2");
    }
 };
 
 function app(data){};
 
-function tract_info(data){
+function tract_info(data, chartnum){
 
   const margin = {top: 60, left: 100, right: 100, bottom: 60};
-  const height = 600
-  const width = 500
+  const height = 500
+  const width = 450
   
   const svg = select("body")
              .append("svg")
-             .attr("class", "line-part")
+             .attr("class", "line-part" + chartnum)
              .attr("height", height)
              .attr("width", width);
 
   svg.append("text")
      .attr("x", (width - margin.left-margin.right) / 3)
      .attr("y", margin.top/3)
-     .text("Property Value for Commercial and Residential Building")
+     .text("Property Value for Commercial and Residential ")
      .style("font-size", "14px")
      .attr("alignment-baseline","middle")
   
   svg.append("text")
-     .attr("x", (width -margin.left-margin.right) / 3)
+     .attr("x", ((width -margin.left-margin.right) / 3) + 73)
      .attr("y", (margin.top/3) + 15)
-     .text("in Each Percentile, the property values have unit of $1000")
+     .text("Building in Each Percentile")
      .style("font-size", "14px")
      .attr("alignment-baseline","middle")
+
+  svg.append("text")
+     .attr("x", ((width -margin.left-margin.right) / 3) + 50)
+     .attr("y", (margin.top/3) + 30)
+     .text("the property values have unit of $1000")
+     .style("font-size", "12px")
   
   svg.append("text")
      .attr("x", (width -margin.right))
@@ -191,8 +197,8 @@ function tract_info(data){
 };
 
 function plot_choropleth(val, count){
-   var width = 800;
-   var height = 600;
+   var width = 600;
+   var height = 500;
    const margin = {top: 60, left: 100, right: 100, bottom: 60};
 
    const div = select('body')
@@ -225,26 +231,26 @@ function plot_choropleth(val, count){
            .attr('value', d => d)
            .text(function(d, i){return buttom_text[i]});
 
-    svg.append("text").attr("x", (width -margin.left-margin.right) / 3).attr("y", margin.top/5)
+    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 30).attr("y", margin.top/5)
        .text("Choropleth Showing Neighborhood Attributes").style("font-size", "18px")
        .attr("alignment-baseline","middle");
     
-    svg.append("text").attr("x", (width -margin.left-margin.right) / 3).attr("y", (margin.top/5) + 20)
-       .text("selection between total property value, median income").style("font-size", "14px")
+    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 70).attr("y", (margin.top/5) + 20)
+       .text("selection between total property value, median income").style("font-size", "12px")
        .attr("alignment-baseline","middle");
     
-    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) - 10).attr("y", (margin.top/5) + 40)
-       .text("square footage of buildings and distance to commercial district").style("font-size", "14px")
+    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 42).attr("y", (margin.top/5) + 35)
+       .text("square footage of buildings and distance to commercial district").style("font-size", "12px")
        .attr("alignment-baseline","middle")
 
   d3.json('./data/full_sub_CL701902_part.geojson').then(function(data) {
 
-      var scale = 300000;
+      var scale = 250000;
       var offset = [width/4, height/2];
 
       var projection = d3.geoEquirectangular()
                          .scale(scale)
-                         .center([-118.494248, 34.017235])
+                         .center([-118.494248, 34.019235])
                          .translate(offset);
 
       var geopath = d3.geoPath().projection(projection);
@@ -261,7 +267,7 @@ function plot_choropleth(val, count){
       const q_idx = [0.2, 0.4, 0.6, 0.8]
       const val_quan = q_idx.reduce((el, r) => el.concat(Math.ceil(d3.quantile(color_dom, r))), []);
       
-      const legend_x = width - margin.right;
+      const legend_x = width - margin.right + 15;
       const legend_y = height - 3 * margin.bottom - 60;
       const legend_gap = 15;
       const legend = svg.selectAll("rect")
@@ -303,12 +309,12 @@ function plot_choropleth(val, count){
           )
           .on("click", function(d){render(d, 0, "click", d.properties["CT"])});
       
-      svg.append("text").attr("x", width / 10)
-          .attr("y", (height / 2) + 40).text("Commercial").style("font-size", "14px")
+      svg.append("text").attr("x", (width / 10) - 35)
+          .attr("y", (height / 2) + 45).text("Commercial").style("font-size", "14px")
           .attr("alignment-baseline","middle").attr("fill", "black");
          
-      svg.append("text").attr("x", (width / 10) + 30)
-          .attr("y", (height / 2) + 55).text("District").style("font-size", "14px")
+      svg.append("text").attr("x", (width / 10))
+          .attr("y", (height / 2) + 60).text("District").style("font-size", "14px")
           .attr("alignment-baseline","middle").attr("fill", "black");
 
       svg.selectAll("instru1")
@@ -328,9 +334,10 @@ function plot_choropleth(val, count){
          .style("font-weight", "bold")
          .attr("fill", "blue")
          .attr("x", 200)
-         .attr("y", 450);
+         .attr("y", 400);
   });
 }
+
 
 function react_line(CT_ind){
 
@@ -341,7 +348,7 @@ function react_line(CT_ind){
      }
    }
    select("body").selectAll("svg.line-part").remove();
-   tract_info(sub_data)
+   tract_info(sub_data, "2")
    });
 }
 
@@ -353,15 +360,15 @@ function react_line(CT_ind){
 // Author: Andrew Mollica
 // Date: 2018
 //##########################################################################
-function ridge(regional, CTind){
+function ridge(regional, CTind, plotnum){
 
   const margin = {top: 60, left: 100, right: 100, bottom: 60};
-  const height = 600
-  const width = 550
+  const height = 500
+  const width = 450
   
   const svg = select("body")
              .append("svg")
-             .attr("class", "ridge-part")
+             .attr("class", "ridge-part" + plotnum)
              .attr("align", "right")
              .attr("height", height)
              .attr("width", width);
@@ -369,12 +376,14 @@ function ridge(regional, CTind){
    const g = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`)
    
    var dirc = ""
-   if (regional === "no"){dirc = './data/yearly_plot2.csv'} else{dirc = './data/yearly_plot3.csv'}
+   if (regional === "SM"){dirc = './data/yearly_plot2.csv'
+   }else if (regional === "CL"){dirc = './data/LA_summary_ridge.csv'
+   }else{dirc = './data/yearly_plot3.csv'}
 
    d3.csv(dirc).then(function(data){
 
    var sub_data = [] 
-   if (regional != "no"){
+   if ((regional != "SM") && (regional != "CL")){
       for (let i = 0; i < data.length; i++){if (data[i].CT == CTind){
          sub_data.push(data[i])
          }
@@ -385,10 +394,10 @@ function ridge(regional, CTind){
    var pwidth = width - margin.left - margin.right;
    const pheight = height - margin.bottom - margin.top;
 
-   var categories = ["TotalValue2014", "TotalValue2015", "TotalValue2016", "TotalValue2017", "TotalValue"]
+   var categories = ["PropertyValue2014", "PropertyValue2015", "PropertyValue2016", "PropertyValue2017", "PropertyValue2018"]
    var n = categories.length
    
-   var x_arr = data.reduce((el, r) => el.concat(r.TotalValue), []);
+   var x_arr = data.reduce((el, r) => el.concat(r.PropertyValue2018), []);
    var max_xarr = d3.max(x_arr.sort((a, b) => a - b));
    var min_xarr = d3.min(x_arr.sort((a, b) => a - b));
 
@@ -437,8 +446,9 @@ function ridge(regional, CTind){
     var color_min = d3.min(medians);
     var color_max = d3.max(medians);
     var color = d3.scaleSequential()
-			  		     .domain([color_min, color_max])
-                    .interpolator(d3.interpolateBlues);
+                    //.domain([color_min, color_max])
+                    .domain([color_max, color_min])
+                    .interpolator(d3.interpolateCividis);
     var q_idx = [0, 0.25, 0.5, 0.75, 1]
     var val_quan = q_idx.reduce((el, r) => el.concat(Math.ceil(d3.quantile(medians, r))), []);
 
@@ -495,14 +505,14 @@ function ridge(regional, CTind){
      .attr("x", (width - margin.left-margin.right) / 4)
      .attr("y", margin.top/3)
      .text("Property Value Distribution From 2014 - 2018")
-     .style("font-size", "16px")
+     .style("font-size", "14px")
      .attr("alignment-baseline","middle")
    
    svg.append("text")
      .attr("x", ((width -margin.left-margin.right) / 4) - 10)
      .attr("y", (margin.top/3) + 15)
-     .text("the distribution is updated if specific region is selected")
-     .style("font-size", "14px")
+     .text("The color represents the median value of the distribution")
+     .style("font-size", "12px")
      .attr("alignment-baseline","middle")
   });
 };
@@ -520,9 +530,10 @@ function kernelDensityEstimator(kernel, X) {
    };
  }
 
+
 function LA_bivariate(){
    
-   var width = 2000;
+   var width = 1500;
    var height = 800;
    const margin = {top: 60, left: 100, right: 100, bottom: 60};
 
@@ -532,11 +543,11 @@ function LA_bivariate(){
                .attr("width", width)
                .attr("height", height);
    
-   svg.append("text").text("Bivariate Choropleth for Property Value").attr("x", 30).attr("y", 80).style("font-size", "20px")
-   svg.append("text").text("and Building Square Footage in Los Angeles").attr("x", 20).attr("y", 105).style("font-size", "20px")
-   svg.append("text").text("properties in the sub-urban regions in LA have both higher building square").attr("x", 20).attr("y", 130).style("font-size", "12px")
-   svg.append("text").text("footage and property values").attr("x", 130).attr("y", 145).style("font-size", "12px")
-
+   svg.append("text").text("Bivariate Choropleth for Property Value").attr("x", 20).attr("y", 110).style("font-size", "20px")
+   svg.append("text").text("and Building Square Footage in LA").attr("x", 45).attr("y", 135).style("font-size", "20px")
+   svg.append("text").text("properties in the sub-urban regions in LA have both higher building").attr("x", 20).attr("y", 160).style("font-size", "12px")
+   svg.append("text").text("square footage and property values. Suburbanization effect remains").attr("x", 20).attr("y", 175).style("font-size", "12px")
+   svg.append("text").text("in Greater Los Angeles Region").attr("x", 142.5).attr("y", 190).style("font-size", "12px")
    d3.json('./data/plot_geo.geojson').then(function(data){
 
       var scale = 50000;
@@ -634,7 +645,7 @@ function LA_bivariate(){
          .text(function(d){return d;})
          .style("font-size", "14px")
          .attr("x", 1250)
-         .attr("y", function(d, i){return legend_y + 20 + i * 40;});
+         .attr("y", function(d, i){return legend_y + 25 + i * 40;});
 
       svg.selectAll("legend_text_v")
          .data(["Porperty", "Values"])
@@ -642,7 +653,7 @@ function LA_bivariate(){
          .append("text")
          .text(function(d){return d;})
          .style("font-size", "14px")
-         .attr("x", 1420)
+         .attr("x", function(d, i){return 1420 + i * 6})
          .attr("y", function(d, i){return legend_y + 60 + i * 20;});
 
       svg.selectAll("legend_text_v")
@@ -651,32 +662,76 @@ function LA_bivariate(){
          .append("text")
          .text(function(d){return d;})
          .style("font-size", "14px")
-         .attr("x", 1320)
-         .attr("y", function(d, i){return legend_y + 140 + i * 20;});
+         .attr("x", function(d, i){return 1310 + i * 25})
+         .attr("y", function(d, i){return legend_y + 135 + i * 15;});
 
       svg.append("text")
          .text("Santa Monica")
          .style("font-size", "16px")
          .style("font-weight", "bold")
          .attr("fill", "blue")
-         .attr("x", 570)
+         .attr("x", 440)
          .attr("y", 420);
+      
+      var txt1 = ["In the above bivariate choropleth, we can observe that the ",
+                  "distribution of property value and the building square ",
+                  "footage are diversed. The sub-urban region tends to have both ",
+                  "higher building square footage and values. The effect of ",
+                  "sub-urbanization in Los Angeles is likely remained that people ",
+                  "have higher tendency to live in the outskirt with better living ",
+                  "space and commute to work at the downtown. In my hypothesis, ",
+                  "the high property values in the outskirt are driven by the ",
+                  "residential properties which contain larger space and facilities, ",
+                  "and the high property value in the city center is driven by the ",
+                  "profitability of commercial properties."]
+
+      svg.selectAll('article1')
+         .attr("class", "txt1")
+         .data(txt1)
+         .enter()
+         .append("text")
+         .text(function(d){return d;})
+         .attr("width", width)
+         .attr("x", 100)
+         .attr("y", function(d, i){return 500 + i * 15})
+         .style("font-size", "14px")
    });
+   LA_summary_line();
+   ridge("CL", "", "1")
 }
 
+
 function article_insert(){
+
+   select("body").append("div").attr("class", "bar").attr("background", "white");
+   select("body").append("div").attr("class", "bar").attr("background", "white");
+   select("body").append("div").attr("class", "bar").attr("background", "white");
+   select("body").append("div").attr("class", "bar").attr("background", "white");
+   select("body").append("div").attr("class", "bar").attr("background", "white");
+   select("body").append("div").attr("class", "bar").attr("background", "white");
+   //select("body").append("div").attr("class", "bar").attr("background", "white");
+   //select("body").append("div").attr("class", "bar").attr("background", "white");
 
    select("body").append("text").text("For More Detail, Static Analysis Can be Found at ")
    select("body").append("a")
                  .text("Static Analysis for Housing Properties in Santa Monica")
                  .attr("href", "https://tayuny.github.io/Santa_Monica_Static/")
 
-   select("body").append("div").attr("class", "bar").attr("background", "white")
+   select("body").append("div").attr("class", "bar").attr("background", "white");
 
    select("body").append("text")
                  .attr("background", "rgb(241, 243, 245)")
                  .attr("align", "justify")
-                 .text("Interactive Choropleth for Properties in Santa Monica") 
+                 .text("Interactive Choropleth Panel for Properties in Santa Monica") 
                  .style("font-size", "28px")
-                 .style("font-weitht", "bold")      
+                 .style("font-weitht", "bold")
+   
 }
+
+
+function LA_summary_line(){
+
+    d3.csv('./data/LA_summary_line.csv').then(function(data){
+      tract_info(data, "1");
+    });
+};
