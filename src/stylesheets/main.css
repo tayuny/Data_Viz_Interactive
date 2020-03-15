@@ -36,20 +36,21 @@ div.sources {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
   background: rgb(241, 243, 245);
-  width: 100%;
-  position: fixed;
+  width: 500px;
+  top: 2280px;
+  position: absolute;
   bottom: 0;
 }
 
 div.sources * {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
-  display: inline-block;
+  display: block;
 }
 
 .line-part1 {
   position: absolute;
-  top: 900px;
+  top: 920px;
   left: 50px;
 }
 
