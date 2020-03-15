@@ -26,7 +26,6 @@ div.topics h3{
   height: 100px;
   width: 60px;
   background: white;
-  opacity:0.5;
 }
 
 .bar *{
@@ -46,4 +45,80 @@ div.sources * {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10px;
   display: inline-block;
+}
+
+.line-part1 {
+  position: absolute;
+  top: 900px;
+  left: 50px;
+}
+
+.ridge-part1 {
+  position: absolute;
+  top: 900px;
+  left: 800px;
+}
+
+.CL_text1 {
+  position: absolute;
+  width: 200px;
+  top: 1050px;
+  left: 550px;
+}
+
+.CL_text1 * {
+  font-size: 14px;
+}
+
+.CL_text2 {
+  position: absolute;
+  width: 200px;
+  top: 1050px;
+  left: 1300px;
+}
+
+.CL_text2 * {
+  font-size: 14px;
+}
+
+.CL_SM {
+  position: absolute;
+  top: 1500px;
+  left:0px;
+}
+
+.CL_SM * {
+  font-size: 14px;
+  font-family: Verdana, Geneva, sans-serif;
+  font-weight: bold;
+}
+
+.panel_shade {
+  position: absolute;
+  top: 1760px;
+  left:0px;
+  height: 520px;
+  width: 1500px;
+  opacity: 0.5;
+  z-index: -100;
+  background: rgb(167, 166, 166);
+}
+
+
+.line-part2 {
+  position: absolute;
+  top: 1780px;
+  left: 600px;
+}
+
+.ridge-part2 {
+  position: absolute;
+  top: 1780px;
+  left: 1050px;
+}
+
+.map_part{
+  position: absolute;
+  top: 1790px;
+  left: 0px;
 }
