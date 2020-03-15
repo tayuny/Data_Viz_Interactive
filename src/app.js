@@ -72,7 +72,7 @@ function tract_info(data, chartnum){
   svg.append("text")
      .attr("x", ((width -margin.left-margin.right) / 3) + 50)
      .attr("y", (margin.top/3) + 30)
-     .text("the property values have unit of $1000")
+     .text("the property values have unit of $1,000")
      .style("font-size", "12px")
   
   svg.append("text")
@@ -138,6 +138,12 @@ function tract_info(data, chartnum){
                  .y(function(d) {return y(d.COM_value/ 1000);})
                  .curve(d3.curveMonotoneX)
   
+  svg.append("text").attr("x", 105).attr("y", 100).text("Percentile: ").attr("font-size", 12);
+  svg.append("text").attr("x", 105).attr("y", 115).text("Property Type: ").attr("font-size", 12);
+  svg.append("text").attr("x", 105).attr("y", 130).text("Property Value: ").attr("font-size", 12);
+  //svg.append("text").attr("class", "perc_info").attr("x", 200).attr("y", 130).text((d3.median(y_arr) / 1000) + " (median)").attr("font-size", 12);
+
+
   g.selectAll("dot")
    .data(data)
    .enter()
@@ -150,10 +156,17 @@ function tract_info(data, chartnum){
        d3.select(this).attr("fill", "white")
                       .attr("r", 10)
                       .attr("stroke", "#4446b8");
+       select("body").selectAll(".perc_info").remove();
+
+       svg.append("text").attr("class", "perc_info").attr("x", 175).attr("y", 100).text(d.percentile).attr("font-size", 12);
+       svg.append("text").attr("class", "perc_info").attr("x", 200).attr("y", 115).text("residential").attr("font-size", 12);
+       svg.append("text").attr("class", "perc_info").attr("x", 205).attr("y", 130).text(d.RES_value / 1000).attr("font-size", 12);
        })
     .on("mouseleave", function(d) {
         d3.select(this).attr("fill", "#4446b8")
                        .attr("r", 5);
+        select("body").selectAll(".perc_info").remove();
+        //svg.append("text").attr("class", "perc_info").attr("x", 200).attr("y", 130).text(d3.median(y_arr) + "(median)").attr("font-size", 12);
       });;
 
    g.selectAll("dot")
@@ -165,15 +178,17 @@ function tract_info(data, chartnum){
    .attr("r", 5)
    .attr("fill", "orange")
    .on("mouseenter", function(d) {
-    d3.select(this).attr("fill", "white")
+      d3.select(this).attr("fill", "white")
                    .attr("r", 10)
                    .attr("stroke", "orange")
-                   //.text("percentile: " + String(d.percentile) + 
-                   //"  ,  Property Value: " + String(d.COM_value / 10));
+      svg.append("text").attr("class", "perc_info").attr("x", 175).attr("y", 100).text(d.percentile).attr("font-size", 12);
+      svg.append("text").attr("class", "perc_info").attr("x", 200).attr("y", 115).text("commercial").attr("font-size", 12);
+      svg.append("text").attr("class", "perc_info").attr("x", 205).attr("y", 130).text(d.COM_value / 1000).attr("font-size", 12);
     })
     .on("mouseleave", function(d) {
       d3.select(this).attr("fill", "orange")
                      .attr("r", 5);
+      select("body").selectAll(".perc_info").remove();
     });
                 
   g.append("path")
@@ -211,10 +226,14 @@ function plot_choropleth(val, count){
                 .attr("width", width)  
                 .attr("height", height);
   
-   const buttom_text = ["Median Property Value", "Median Income", 
-                       "Median Square Footage of Buildings",
-                       "Traveling Time to Commercial District"]
-   const buttom_val = ["TotalValue", "median_income", "SQFTmain", "Travel_Time701902"]
+   const buttom_text = ["(Please Select Your Variable)",
+                       "Median Property Value ($)", "Median Income ($)", 
+                       "Median Square Footage of Buildings (square foot)",
+                       "Traveling Time to Commercial District (second)"]
+   const buttom_val = ["TotalValue", "TotalValue", "median_income", "SQFTmain", "Travel_Time701902"]
+   const val_rel = {"TotalValue":"Median Property Value ($)", "median_income":"Median Income ($)", 
+                    "SQFTmain":"Median Square Footage of Buildings (square foot)", 
+                    "Travel_Time701902":"Traveling Time to Commercial District (second)"}
 
    const dropDown = div.append('select')
                         .attr("class", "switch_bar")
@@ -230,6 +249,14 @@ function plot_choropleth(val, count){
            .append('option')
            .attr('value', d => d)
            .text(function(d, i){return buttom_text[i]});
+    
+    svg.append("text").attr("x", 30).attr("y", 400).attr("fill", "black").text("Current Selected Variable: ")
+       .attr("font-weight", "bold").attr("font-size", 14)
+    svg.append("text").attr("x", 245).attr("y", 400).attr("fill", "black").text(val_rel[val])
+       .attr("font-weight", "bold").attr("font-size", 14)
+   
+    svg.append("text").attr("x", 30).attr("y", 420).attr("fill", "black").text("The Value of the selected variable in the selected region is: ")
+       .attr("font-weight", "bold").attr("font-size", 10)
 
     svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 30).attr("y", margin.top/5)
        .text("Choropleth Showing Neighborhood Attributes").style("font-size", "18px")
@@ -259,6 +286,10 @@ function plot_choropleth(val, count){
       const color_dom = features.reduce((el, r) => el.concat(r.properties[val]), []);
       const color_min = d3.min(color_dom);
       const color_max = d3.max(color_dom);
+
+      svg.append("text").attr("class", "local-info")
+                .attr("x", 370).attr("y", 420).attr("fill", "black").text("(entire Santa Monica) " + d3.median(color_dom))
+                .attr("font-weight", "bold").attr("font-size", 10);
 
       const color = d3.scaleSequential()
 			  		       .domain([color_min, color_max])
@@ -305,9 +336,15 @@ function plot_choropleth(val, count){
           })
          .on("mouseleave", function(d) {
             d3.select(this)
-              .attr("fill", function(d){return color(d.properties[val]);})}
-          )
-          .on("click", function(d){render(d, 0, "click", d.properties["CT"])});
+              .attr("fill", function(d){return color(d.properties[val]);})
+           })
+          .on("click", function(d){
+             render(d, 0, "click", d.properties["CT"]);
+             select("body").selectAll(".local-info").remove();
+             svg.append("text").attr("class", "local-info")
+                .attr("x", 370).attr("y", 420).attr("fill", "black").text(d.properties[val])
+                .attr("font-weight", "bold").attr("font-size", 10);
+            });
       
       svg.append("text").attr("x", (width / 10) - 35)
           .attr("y", (height / 2) + 45).text("Commercial").style("font-size", "14px")
@@ -333,8 +370,8 @@ function plot_choropleth(val, count){
          .style("font-size", "14px")
          .style("font-weight", "bold")
          .attr("fill", "blue")
-         .attr("x", 200)
-         .attr("y", 400);
+         .attr("x", 220)
+         .attr("y", 80);
   });
 }
 
@@ -499,7 +536,7 @@ function ridge(regional, CTind, plotnum){
    svg.append("text").text("Median").attr("x", legend_x).attr("y", legend_y - 50);
    svg.append("text").text("Property").attr("x", legend_x).attr("y", legend_y - 35);
    svg.append("text").text("Value").attr("x", legend_x).attr("y", legend_y - 20);
-   svg.append("text").text("($10000)").attr("x", legend_x).attr("y", legend_y - 5);
+   svg.append("text").text("($10,000)").attr("x", legend_x).attr("y", legend_y - 5);
 
    svg.append("text")
      .attr("x", (width - margin.left-margin.right) / 4)
@@ -679,7 +716,7 @@ function LA_bivariate(){
                   "higher building square footage and values. The effect of ",
                   "sub-urbanization in Los Angeles is likely remained that people ",
                   "have higher tendency to live in the outskirt with better living ",
-                  "space and commute to work at the downtown. In my hypothesis, ",
+                  "space and commute to work in the downtown. In my hypothesis, ",
                   "the high property values in the outskirt are driven by the ",
                   "residential properties which contain larger space and facilities, ",
                   "and the high property value in the city center is driven by the ",
