@@ -6,8 +6,6 @@ import "d3-array";
 import * as d3 from "d3";
 import './stylesheets/main.css';
 
-console.log("hello world")
-
 const count = 0;
 
 domReady(() => {
@@ -232,8 +230,8 @@ function plot_choropleth(val, count){
                        "Traveling Time to Commercial District (second)"]
    const buttom_val = ["TotalValue", "TotalValue", "median_income", "SQFTmain", "Travel_Time701902"]
    const val_rel = {"TotalValue":"Median Property Value ($)", "median_income":"Median Income ($)", 
-                    "SQFTmain":"Median Square Footage of Buildings (square foot)", 
-                    "Travel_Time701902":"Traveling Time to Commercial District (second)"}
+                    "SQFTmain":"Median Square Footage of Buildings", 
+                    "Travel_Time701902":"Traveling Time to Commercial District (sec)"}
 
    const dropDown = div.append('select')
                         .attr("class", "switch_bar")
