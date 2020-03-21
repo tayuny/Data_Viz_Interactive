@@ -261,7 +261,7 @@ function plot_choropleth(val, count){
        .attr("alignment-baseline","middle");
     
     svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 70).attr("y", (margin.top/5) + 20)
-       .text("selection between total property value, median income").style("font-size", "12px")
+       .text("selection between median property value, median income,").style("font-size", "12px")
        .attr("alignment-baseline","middle");
     
     svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 42).attr("y", (margin.top/5) + 35)
@@ -710,14 +710,14 @@ function LA_bivariate(){
       
       var txt1 = ["In the above bivariate choropleth, we can observe that the ",
                   "distribution of property value and the building square ",
-                  "footage are diversed. The sub-urban region tends to have both ",
+                  "footage are diversified. The sub-urban regions tend to have both ",
                   "higher building square footage and values. The effect of ",
                   "sub-urbanization in Los Angeles is likely remained that people ",
                   "have higher tendency to live in the outskirt with better living ",
                   "space and commute to work in the downtown. In my hypothesis, ",
                   "the high property values in the outskirt are driven by the ",
-                  "residential properties which contain larger space and facilities, ",
-                  "and the high property value in the city center is driven by the ",
+                  "residential properties which contain larger space and better facilities, ",
+                  "and the high property values in the city center are driven by the ",
                   "profitability of commercial properties."]
 
       svg.selectAll('article1')
