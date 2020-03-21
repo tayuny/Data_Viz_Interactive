@@ -260,7 +260,7 @@ function plot_choropleth(val, count){
        .text("Choropleth Showing Neighborhood Attributes").style("font-size", "18px")
        .attr("alignment-baseline","middle");
     
-    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 70).attr("y", (margin.top/5) + 20)
+    svg.append("text").attr("x", ((width -margin.left-margin.right) / 3) + 58).attr("y", (margin.top/5) + 20)
        .text("selection between median property value, median income,").style("font-size", "12px")
        .attr("alignment-baseline","middle");
     
